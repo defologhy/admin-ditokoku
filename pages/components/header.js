@@ -4,7 +4,7 @@ const { Header } = Layout;
 import {
   UserOutlined, LogoutOutlined
 } from '@ant-design/icons';
-import getUsernameAvatar from './user-avatar';
+import getUsernameAvatar from '../../public/user-avatar';
 
 const HeaderPage = () => {
   const {
@@ -21,7 +21,7 @@ const HeaderPage = () => {
           <Menu mode="horizontal" style={{
             float: 'right'
           }}>
-          <Menu.SubMenu title={getUsernameAvatar('defit')} >
+          <Menu.SubMenu title={getUsernameAvatar('defit')} style={{marginRight:'10px'}} >
           <Menu.Item key="setting:1">
             <span>
               <UserOutlined />
