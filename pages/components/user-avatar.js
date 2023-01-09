@@ -18,7 +18,7 @@ function getColor(username) {
   return colors[(firstChar + secondChar + thirdChar) % 7];
 }
 
-export const getUsernameAvatar = (username, size = 'medium') => {
+const getUsernameAvatar = (username, size = 'medium') => {
   return (
     <div>
       <Avatar
@@ -32,3 +32,5 @@ export const getUsernameAvatar = (username, size = 'medium') => {
     </div>
   );
 };
+
+export default getUsernameAvatar

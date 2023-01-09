@@ -4,7 +4,7 @@ const { Header } = Layout;
 import {
   UserOutlined, LogoutOutlined
 } from '@ant-design/icons';
-import { getUsernameAvatar } from './user-avatar';
+import getUsernameAvatar from './user-avatar';
 
 const HeaderPage = () => {
   const {
