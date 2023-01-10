@@ -1,4 +1,4 @@
-// /** @type {import('next').NextConfig} */
+/** @type {import('next').NextConfig} */
 // const nextConfig = {
 //   env: {
 //     REACT_APP_NAME: "ADMIN DITOKOKU",
