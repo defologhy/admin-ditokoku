@@ -570,7 +570,7 @@ const ResellerEdit = () => {
                         </Upload> */}
                     </Form.Item>
                     <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleEdit}>
-                        Submit
+                    Simpan
                     </Button>
                 </Form>
             </Card>

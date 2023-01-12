@@ -1,5 +1,7 @@
 import {
   UserOutlined,
+  HomeOutlined,
+  SettingOutlined
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 const { Sider } = Layout;
@@ -13,17 +15,12 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
-const items = [getItem(<Link href="/">
-  Beranda
-</Link>, '1', <UserOutlined />),
-getItem(<Link href="/resellers/page">
-  Reseller
-</Link>, '2', <UserOutlined />),
-  // getItem('User', 'sub1', <UserOutlined />, [
-  //   getItem('Tom', '3'),
-  //   getItem('Bill', '4'),
-  //   getItem('Alex', '5'),
-  // ]),
+const items = [
+  getItem(<Link href="/"> Beranda </Link>, '1', <HomeOutlined />),
+  getItem(<Link href="/resellers/page"> Reseller </Link>, '2', <UserOutlined />),
+  getItem('Konfigurasi', 'sub1', <SettingOutlined />, [
+    getItem(<Link href="/settings/balance-bonus"> Saldo Bonus </Link>, '3', '')
+  ]),
   // getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
   // getItem('Files', '9', <FileOutlined />),
 ];

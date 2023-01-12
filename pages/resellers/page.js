@@ -331,6 +331,40 @@ const ResellerPage = () => {
       ...getColumnSearchProps('gender_name')
     },
     {
+      title: 'Saldo Bonus',
+      width: '35%',
+      dataIndex: 'balance_bonus_amount',
+      key: 'balance_bonus_amount',
+      // sorter: (a, b) => a.balance_bonus_amount.localeCompare(b.balance_bonus_amount),
+      sortDirections: ['descend', 'ascend'],
+      render(text, record) {
+        return {
+          props: {
+            style: { textAlign: 'left' }
+          },
+          children: <div>{text}</div>
+        };
+      },
+      // ...getColumnSearchProps('balance_bonus_amount')
+    },
+    {
+      title: 'Saldo Regular',
+      width: '35%',
+      dataIndex: 'balance_regular_amount',
+      key: 'balance_regular_amount',
+      // sorter: (a, b) => a.balance_regular_amount.localeCompare(b.balance_regular_amount),
+      sortDirections: ['descend', 'ascend'],
+      render(text, record) {
+        return {
+          props: {
+            style: { textAlign: 'left' }
+          },
+          children: <div>{text}</div>
+        };
+      },
+      // ...getColumnSearchProps('balance_regular_amount')
+    },
+    {
       title: 'Opsi',
       key: 'opsi',
       align: 'center',
