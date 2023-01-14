@@ -62,6 +62,7 @@ function LoginPage(props) {
             //Execute Axios Configuration For JsonContentValidation
             try {
                 signInResult = await axios.request(axiosConfigSignIn);
+                console.log("signInResult:");console.log(signInResult);
                 setValues({ ...values, loading: false });
 
                 setCookie('admin_cookies', signInResult.data.data, { expires: Number(process.env.REACT_APP_COOKIE_EXPIRES) });
