@@ -65,8 +65,8 @@ function LoginPage(props) {
                 console.log("signInResult:");console.log(signInResult);
                 setValues({ ...values, loading: false });
 
-                setCookie('admin_cookies', signInResult.data.data, { expires: Number(process.env.REACT_APP_COOKIE_EXPIRES) });
-                // setCookie('admin_cookies', signInResult.data.data, { maxAge: Number(process.env.REACT_APP_COOKIE_EXPIRES) });
+                // setCookie('admin_cookies', signInResult.data.data, { expires: Number(process.env.REACT_APP_COOKIE_EXPIRES) });
+                setCookie('admin_cookies', signInResult.data.data, { maxAge: Number(process.env.REACT_APP_COOKIE_EXPIRES) });
 
                 console.log("Hasil Sig In")
                 //console.log(sigInResults);
