@@ -6,6 +6,7 @@ import Router, { useRouter } from 'next/router';
 import { Card, Layout, Upload, Button, Input, Form, Select, Row, Col, Modal } from 'antd';
 const { Content } = Layout;
 import { UploadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 Router.onRouteChangeStart = (url) => {
     console.log(url);
@@ -15,7 +16,16 @@ Router.onRouteChangeComplete = () => { NProgress.done() };
 Router.onRouteChangeError = () => { NProgress.done() };
 const { confirm, success } = Modal;
 
-const ResellerAdd = () => {
+const ResellerAdd = (props) => {
+
+    const router = useRouter()
+    if (process.browser){
+        if (props.status_code === 401) {
+            router.push('/auth/login')
+        }
+    }
+
+    const cookiesData = (props.cookies_data ? JSON.parse(props.cookies_data) : null);
 
     useEffect(() => {
         getGender();
@@ -30,7 +40,7 @@ const ResellerAdd = () => {
 
             //Set Axios Configuration For Sign In to NextJS Server
             const axiosConfigForGenderData = {
-                url: process.env.REACT_APP_RESELLER_API_BASE_URL + process.env.REACT_APP_RESELLER_API_VERSION_URL + '/genders'
+                url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + '/genders'
                 , method: "GET"
                 , timeout: 40000
                 , responseType: "json"
@@ -50,34 +60,31 @@ const ResellerAdd = () => {
             } catch (error) {
                 console.log(error)
                 if (error.response == null) {
-                    // Modal.error({
-                    //     title: "Internal Server Error",
-                    //     content: "Error On Get Data SKU Plant Storage Location. (Please contact you system administrator and report this error message)",
-                    // });
+                    Modal.error({
+                        title: "Internal Server Error",
+                        content: "Error On Get Data Gender",
+                    });
                 } else {
-                    // if (error.response.status === 401) {
-                    //     Router.push("/security/sign-in");
-                    //     return {}
-                    // }
-                    // Modal.error({
-                    //     title: error.response.data.error_title,
-                    //     content: error.response.data.error_message,
-                    // });
+                    if (error.response.status === 401) {
+                        Router.push("/auth/login");
+                        return {}
+                    }
+                    Modal.error({
+                        title: error.response.data.error_title,
+                        content: error.response.data.error_message,
+                    });
                 }
             }
 
         } catch (error) {
             console.log(error.error_message)
             console.log(error)
-            // Modal.error({
-            //     title: error.error_title,
-            //     content: error.error_message,
-            // });
+            Modal.error({
+                title: error.error_title,
+                content: error.error_message,
+            });
         }
     }
-
-    // router
-    const router = useRouter()
 
     const [formAdd] = Form.useForm();
     // usestate
@@ -319,7 +326,7 @@ const ResellerAdd = () => {
                     onOk: async () => {
                         //Execute Add Data
                         const axiosConfigForResellerAdd = {
-                            url: process.env.REACT_APP_RESELLER_API_BASE_URL + process.env.REACT_APP_RESELLER_API_VERSION_URL + "/resellers"
+                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/resellers"
                             , method: "POST"
                             , timeout: 40000
                             , responseType: "json"
@@ -350,7 +357,7 @@ const ResellerAdd = () => {
                                         <Row><Col span={24}>Data Berhasil Disimpan.</Col></Row>
                                     </div>,
                                     onOk: async () => {
-                                        router.push('page')
+                                        router.push('/resellers')
                                     }
                                 })
 
@@ -366,7 +373,7 @@ const ResellerAdd = () => {
                             }
                             else {
                                 if (error.response.status === 401) {
-                                    Router.push("/auth/sign-in");
+                                    Router.push("/auth/login");
                                     return {}
                                 }
                                 Modal.error({
@@ -521,4 +528,30 @@ const ResellerAdd = () => {
         </Content >
     );
 };
+
+// Get Server Side Props
+export async function getServerSideProps({ req, res }) {
+    console.log("getcookie balance bonus config page");
+    console.log(getCookie('admin_cookies', { req, res }))
+    if (!getCookie('admin_cookies', { req, res })) {
+        return {
+            props: {
+                status_code: 401,
+                error_title: "Unauthorized",
+                error_message: "Please sign in to Ditokoku Information System",
+            }
+        }
+    }
+  
+    return {
+        props: {
+            status_code: 200,
+            error_title: "cookie is active",
+            error_message: "cookie is active",
+            cookies_data: getCookie('admin_cookies', { req, res })
+        }
+    }
+  
+  }
+
 export default ResellerAdd;

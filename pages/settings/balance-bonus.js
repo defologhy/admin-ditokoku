@@ -6,6 +6,7 @@ import Router, { useRouter } from 'next/router';
 import { Card, Layout, Upload, Button, Input, Form, Select, Row, Col, Modal } from 'antd';
 const { Content } = Layout;
 import { UploadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 Router.onRouteChangeStart = (url) => {
     console.log(url);
@@ -15,10 +16,18 @@ Router.onRouteChangeComplete = () => { NProgress.done() };
 Router.onRouteChangeError = () => { NProgress.done() };
 const { confirm, success } = Modal;
 
-const BalanceBonus = () => {
+const BalanceBonus = (props) => {
 
-    // router
+    
     const router = useRouter()
+    if (process.browser){
+        if (props.status_code === 401) {
+            router.push('/auth/login')
+        }
+    }
+
+    const cookiesData = (props.cookies_data ? JSON.parse(props.cookies_data) : null);
+
     const [form] = Form.useForm();
     // usestate
     const [txtAmountProperties, settxtAmountProperties] = useState({
@@ -46,7 +55,7 @@ const BalanceBonus = () => {
 
             //Set Axios Configuration For Sign In to NextJS Server
             const axiosConfigForGetData = {
-                url: process.env.REACT_APP_RESELLER_API_BASE_URL + process.env.REACT_APP_RESELLER_API_VERSION_URL + '/configuration-balance-bonus'
+                url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + '/configuration-balance-bonus'
                 , method: "GET"
                 , timeout: 40000
                 , responseType: "json"
@@ -183,7 +192,7 @@ const BalanceBonus = () => {
                     onOk: async () => {
                         //Execute  Data
                         const axiosConfigForBalanceBonusSave = {
-                            url: process.env.REACT_APP_RESELLER_API_BASE_URL + process.env.REACT_APP_RESELLER_API_VERSION_URL + "/configuration-balance-bonus"
+                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/configuration-balance-bonus"
                             , method: "POST"
                             , timeout: 40000
                             , responseType: "json"
@@ -198,9 +207,9 @@ const BalanceBonus = () => {
 
                         //Execute Axios Configuration For JsonContentValidation
                         try {
-                            const BalanceBonusResults = await axios.request(axiosConfigForBalanceBonusSave);
-                            if (BalanceBonusResults.data.hasOwnProperty('status_code') && BalanceBonusResults.data.status_code != 200) {
-                                throw BalanceBonusResults.data
+                            const balanceBonusResults = await axios.request(axiosConfigForbalanceBonusSave);
+                            if (balanceBonusResults.data.hasOwnProperty('status_code') && balanceBonusResults.data.status_code != 200) {
+                                throw balanceBonusResults.data
                             }
                             else {
                                 success({
@@ -312,4 +321,30 @@ const BalanceBonus = () => {
         </Content >
     );
 };
+
+// Get Server Side Props
+export async function getServerSideProps({ req, res }) {
+    console.log("getcookie balance bonus config page");
+    console.log(getCookie('admin_cookies', { req, res }))
+    if (!getCookie('admin_cookies', { req, res })) {
+        return {
+            props: {
+                status_code: 401,
+                error_title: "Unauthorized",
+                error_message: "Please sign in to Ditokoku Information System",
+            }
+        }
+    }
+  
+    return {
+        props: {
+            status_code: 200,
+            error_title: "cookie is active",
+            error_message: "cookie is active",
+            cookies_data: getCookie('admin_cookies', { req, res })
+        }
+    }
+  
+  }
+
 export default BalanceBonus;

@@ -14,7 +14,7 @@ const LayoutBase = ({ children }) => {
       }}
     >
       <Head>
-        <title>Ditokoku.id</title>
+        <title>Admin Ditokoku.id</title>
         <link rel="shortcut icon" href="/assets/images/ditokoku2.png" />
       </Head>
       {/* <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
