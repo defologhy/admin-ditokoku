@@ -262,7 +262,7 @@ const BalanceBonus = (props) => {
         >
             <br />
             <Card
-                title="Balance Bonus"
+                title="Konfigurasi Saldo Bonus"
                 bordered={false}
             // extra={<Button type="primary" >Tambah Balance Bonus</Button>}
             >
