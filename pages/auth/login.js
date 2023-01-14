@@ -72,6 +72,7 @@ function LoginPage(props) {
                 //console.log(sigInResults);
                 router.push("/");
             } catch (error) {
+                console.log("signIn Error:");console.log(error);
                 throw error.response.data;
             }
 
