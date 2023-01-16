@@ -16,7 +16,7 @@ Router.onRouteChangeComplete = () => { NProgress.done() };
 Router.onRouteChangeError = () => { NProgress.done() };
 const { confirm, success } = Modal;
 
-const AdminAdd = (props) => {
+const CategoryProductAdd = (props) => {
 
     // router
     const router = useRouter()
@@ -34,86 +34,39 @@ const AdminAdd = (props) => {
 
     const [formAdd] = Form.useForm();
     // usestate
-    const [txtFullNameProperties, setTxtFullNameProperties] = useState({
-        value: '',
-        validateStatus: 'success',
-        errorMsg: null,
-    });
-    const [txtUsernameProperties, setTxtUsernameProperties] = useState({
-        value: '',
-        validateStatus: 'success',
-        errorMsg: null,
-    });
-    const [txtPasswordProperties, setTxtPasswordProperties] = useState({
+    const [txtCategoryProductNameProperties, setTxtCategoryProductNameProperties] = useState({
         value: '',
         validateStatus: 'success',
         errorMsg: null,
     });
 
     // onchange item form
-    const handleTxtFullNameChange = (e) => {
-        setTxtFullNameProperties({
-            value: e.target.value,
-            validateStatus: 'success',
-            errorMsg: null,
-        })
-        formAdd.setFieldsValue({
-            adminFullName: e.target.value,
-        });
-    }
-
-
-    const handleTxtUsernameChange = (e) => {
+    const handleTxtCategoryProductNameChange = (e) => {
         //validation entry an hanya bisa AlphaNumerik, Spasi [ ] dan tanda titik [.]
         if (/^(?![\s-])[A-Za-z0-9_\s-.]*$/i.test(e.target.value) === true) {
-            setTxtUsernameProperties({
+            setTxtCategoryProductNameProperties({
                 value: e.target.value,
                 validateStatus: 'success',
                 errorMsg: null,
             })
             formAdd.setFieldsValue({
-                adminUsername: e.target.value,
+                categoryProductName: e.target.value,
             });
         } else {
-            setTxtUsernameProperties({
-                value: txtUsernameProperties.value,
+            setTxtCategoryProductNameProperties({
+                value: txtCategoryProductNameProperties.value,
                 validateStatus: 'error',
-                errorMsg: 'Format Username Tidak Valid',
+                errorMsg: 'Format Nama Kategori Produk Tidak Valid',
             })
             formAdd.setFieldsValue({
-                adminUsername: txtUsernameProperties.value,
-            });
-        }
-    }
-
-    const handleTxtPasswordChange = (e) => {
-        //validation entry an hanya bisa AlphaNumerik, Spasi [ ] dan tanda titik [.]
-        if (/^(?![\s-])[A-Za-z0-9_\s-.]*$/i.test(e.target.value) === true) {
-            setTxtPasswordProperties({
-                value: e.target.value,
-                validateStatus: 'success',
-                errorMsg: null,
-            })
-            formAdd.setFieldsValue({
-                adminPassword: e.target.value,
-            });
-        } else {
-            setTxtPasswordProperties({
-                value: txtPasswordProperties.value,
-                validateStatus: 'error',
-                errorMsg: 'Format Password Tidak Valid',
-            })
-            formAdd.setFieldsValue({
-                adminPassword: txtPasswordProperties.value,
+                categoryProductName: txtCategoryProductNameProperties.value,
             });
         }
     }
 
     const cleanFormAdd = () => {
         formAdd.setFieldsValue({
-            adminFullName: ''
-            , adminUsername: ''
-            , adminPassword: ''
+            categoryProductName: ''
         });
     }
 
@@ -124,32 +77,20 @@ const AdminAdd = (props) => {
             .then((values) => {
                 confirm({
                     icon: <QuestionCircleOutlined />,
-                    title: <span>Simpan Data Admin ?</span>,
+                    title: <span>Simpan Data Kategori Produk ?</span>,
                     content: <div>
                         <Row><Col span={24}>Kamu Akan Menyimpan Data:</Col></Row>
                         <br />
                         <Row>
                             <Col span={2} />
                             <Col span={8}>
-                                Username
+                                Nama Kategori Produk
                             </Col>
                             <Col span={1}>
                                 :
                             </Col>
                             <Col span={12}>
-                                {formAdd.getFieldValue('adminUsername')}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={2} />
-                            <Col span={8}>
-                                Nama Lengkap
-                            </Col>
-                            <Col span={1}>
-                                :
-                            </Col>
-                            <Col span={12}>
-                                {formAdd.getFieldValue('adminFullName')}
+                                {formAdd.getFieldValue('categoryProductName')}
                             </Col>
                         </Row>
                         <br />
@@ -159,26 +100,24 @@ const AdminAdd = (props) => {
                     cancelText: 'Cancel',
                     onOk: async () => {
                         //Execute Add Data
-                        const axiosConfigForAdminAdd = {
-                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/admins"
+                        const axiosConfigForCategoryProductAdd = {
+                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/category-products"
                             , method: "POST"
                             , timeout: 40000
                             , responseType: "json"
                             , responseEncoding: "utf8"
                             , headers: { "Content-Type": "application/json" }
                             , data: {
-                                "admin_username": formAdd.getFieldValue('adminUsername'),
-                                "admin_password": formAdd.getFieldValue('adminPassword'),
-                                "responsible_user_id": 1,
-                                "admin_full_name": formAdd.getFieldValue('adminFullName')
+                                "category_product_name": formAdd.getFieldValue('categoryProductName'),
+                                "responsible_user_id": 1
                             }
                         };
 
                         //Execute Axios Configuration For JsonContentValidation
                         try {
-                            const adminResults = await axios.request(axiosConfigForAdminAdd);
-                            if (adminResults.data.hasOwnProperty('status_code') && adminResults.data.status_code != 201) {
-                                throw adminResults.data
+                            const categoryProductResults = await axios.request(axiosConfigForCategoryProductAdd);
+                            if (categoryProductResults.data.hasOwnProperty('status_code') && categoryProductResults.data.status_code != 201) {
+                                throw categoryProductResults.data
                             }
                             else {
                                 cleanFormAdd();
@@ -188,7 +127,7 @@ const AdminAdd = (props) => {
                                         <Row><Col span={24}>Data Berhasil Disimpan.</Col></Row>
                                     </div>,
                                     onOk: async () => {
-                                        router.push('/admin')
+                                        router.push('/category-products')
                                     }
                                 })
 
@@ -199,7 +138,7 @@ const AdminAdd = (props) => {
                             if (error.response == null) {
                                 Modal.error({
                                     title: "Internal Server Error",
-                                    content: "Error Saat Menyimpan Data Admin.(Harap Lapor Kepada Admin)",
+                                    content: "Error Saat Menyimpan Data Category Product.(Harap Lapor Kepada Admin)",
                                 });
                             }
                             else {
@@ -235,9 +174,9 @@ const AdminAdd = (props) => {
         >
             <br />
             <Card
-                title="Tambah Data Admin"
+                title="Tambah Data Kategori Produk"
                 bordered={false}
-            // extra={<Button type="primary" >Tambah Admin</Button>}
+            // extra={<Button type="primary" >Tambah Kategori Produk</Button>}
             >
                 <Form
                     name="basic"
@@ -245,59 +184,29 @@ const AdminAdd = (props) => {
                     labelCol={{ span: 6 }}
                     // initialValues={{
                     //     FullName: txtFullNameProperties.value
-                    //     , AdminEffectiveStartDatetime: txtAdminEffectiveStartDatetimeProperties.value
-                    //     , AdminEffectiveFinishDatetime: txtAdminEffectiveFinishDatetimeProperties.value
+                    //     , CategoryProductEffectiveStartDatetime: txtCategoryProductEffectiveStartDatetimeProperties.value
+                    //     , CategoryProductEffectiveFinishDatetime: txtCategoryProductEffectiveFinishDatetimeProperties.value
                     // }}
                     autoComplete="off"
-                    style={{ width: '50%' }}
+                    style={{ width: '60%' }}
                 >
                     <Form.Item
-                        label="Nama Lengkap"
-                        name="adminFullName"
+                        label="Nama Kategori Produk"
+                        name="categoryProductName"
                         rules={[
-                            { required: true, message: 'Mohon Isi Nama Lengkap' }
+                            { required: true, message: 'Mohon Isi Nama Kategori Produk' }
                         ]}
+                        validateStatus={txtCategoryProductNameProperties.validateStatus}
+                        help={txtCategoryProductNameProperties.errorMsg}
                     >
                         <Input
-                            onChange={handleTxtFullNameChange}
-                            onBlur={handleTxtFullNameChange}
-                            placeholder="Nama Lengkap"
+                            onChange={handleTxtCategoryProductNameChange}
+                            onBlur={handleTxtCategoryProductNameChange}
+                            placeholder="Nama Kategori Produk"
                         />
                     </Form.Item>
 
-                    <Form.Item
-                        label="Username"
-                        name="adminUsername"
-                        rules={[
-                            { required: true, message: 'Mohon Isi Username' }
-                        ]}
-                        validateStatus={txtUsernameProperties.validateStatus}
-                        help={txtUsernameProperties.errorMsg}
-                    >
-                        <Input
-                            onChange={handleTxtUsernameChange}
-                            onBlur={handleTxtUsernameChange}
-                            placeholder="Username"
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Password"
-                        name="adminPassword"
-                        rules={[
-                            { required: true, message: 'Mohon Isi Password' }
-                        ]}
-                        validateStatus={txtPasswordProperties.validateStatus}
-                        help={txtPasswordProperties.errorMsg}
-                    >
-                        <Input.Password
-                            onChange={handleTxtPasswordChange}
-                            onBlur={handleTxtPasswordChange}
-                            placeholder="Password"
-                        />
-                    </Form.Item>
-
-                    <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleAdd}>
+                    <Button type="primary" style={{ marginLeft: '160px' }} onClick={handleAdd}>
                         Simpan
                     </Button>
                 </Form>
@@ -308,7 +217,7 @@ const AdminAdd = (props) => {
 
 // Get Server Side Props
 export async function getServerSideProps({ req, res }) {
-    console.log("getcookie admin page");
+    console.log("getcookie category product add page");
     console.log(getCookie('admin_cookies', { req, res }))
     if (!getCookie('admin_cookies', { req, res })) {
         return {
@@ -331,4 +240,4 @@ export async function getServerSideProps({ req, res }) {
   
   }
   
-export default AdminAdd;
+export default CategoryProductAdd;

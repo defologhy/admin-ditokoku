@@ -91,6 +91,7 @@ function LoginPage(props) {
         <div>
             <Head>
                 <title>Admin Ditokoku.id</title>
+                <link rel="shortcut icon" href="/assets/images/ditokoku2.png" />
             </Head>
             <Row type="flex" justify="center" align="middle" style={{ minHeight: '80vh' }}>
                 <Form onFinish={handleLogin} className={styles.form}>

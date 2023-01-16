@@ -16,7 +16,7 @@ Router.onRouteChangeComplete = () => { NProgress.done() };
 Router.onRouteChangeError = () => { NProgress.done() };
 const { confirm, success } = Modal;
 
-const AdminEdit = (props) => {
+const CategoryProductEdit = (props) => {
 
     // router
     const router = useRouter()
@@ -30,17 +30,7 @@ const AdminEdit = (props) => {
 
     const [formEdit] = Form.useForm();
     // usestate
-    const [txtFullNameProperties, setTxtFullNameProperties] = useState({
-        value: null,
-        validateStatus: 'success',
-        errorMsg: null,
-    });
-    const [txtUsernameProperties, setTxtUsernameProperties] = useState({
-        value: null,
-        validateStatus: 'success',
-        errorMsg: null,
-    });
-    const [txtPasswordProperties, setTxtPasswordProperties] = useState({
+    const [txtCategoryProductNameProperties, setTxtCategoryProductNameProperties] = useState({
         value: null,
         validateStatus: 'success',
         errorMsg: null,
@@ -48,74 +38,37 @@ const AdminEdit = (props) => {
 
     useEffect(() => {
         formEdit.setFieldsValue({
-            adminFullName: (router.query.admin_full_name ? router.query.admin_full_name : null)
-            , adminUsername: router.query.admin_username
+            categoryProductName: router.query.category_product_name
         });
     }, []);
 
     // onchange item form
-    const handleTxtFullNameChange = (e) => {
-        setTxtFullNameProperties({
-            value: e.target.value,
-            validateStatus: 'success',
-            errorMsg: null,
-        })
-        formEdit.setFieldsValue({
-            adminFullName: e.target.value,
-        });
-    }
-
-    const handleTxtUsernameChange = (e) => {
+    const handleTxtCategoryProductNameChange = (e) => {
         //validation entry an hanya bisa AlphaNumerik, Spasi [ ] dan tanda titik [.]
         if (/^(?![\s-])[A-Za-z0-9_\s-.]*$/i.test(e.target.value) === true) {
-            setTxtUsernameProperties({
+            setTxtCategoryProductNameProperties({
                 value: e.target.value,
                 validateStatus: 'success',
                 errorMsg: null,
             })
             formEdit.setFieldsValue({
-                adminUsername: e.target.value,
+                categoryProductName: e.target.value,
             });
         } else {
-            setTxtUsernameProperties({
-                value: txtUsernameProperties.value,
+            setTxtCategoryProductNameProperties({
+                value: txtCategoryProductNameProperties.value,
                 validateStatus: 'error',
-                errorMsg: 'Format Username Tidak Valid',
+                errorMsg: 'Format Nama Kategori Produk Tidak Valid',
             })
             formEdit.setFieldsValue({
-                adminUsername: txtUsernameProperties.value,
-            });
-        }
-    }
-
-    const handleTxtPasswordChange = (e) => {
-        //validation entry an hanya bisa AlphaNumerik, Spasi [ ] dan tanda titik [.]
-        if (/^(?![\s-])[A-Za-z0-9_\s-.]*$/i.test(e.target.value) === true) {
-            setTxtPasswordProperties({
-                value: e.target.value,
-                validateStatus: 'success',
-                errorMsg: null,
-            })
-            formEdit.setFieldsValue({
-                adminPassword: e.target.value,
-            });
-        } else {
-            setTxtPasswordProperties({
-                value: txtPasswordProperties.value,
-                validateStatus: 'error',
-                errorMsg: 'Format Password Tidak Valid',
-            })
-            formEdit.setFieldsValue({
-                adminPassword: txtPasswordProperties.value,
+                categoryProductName: txtCategoryProductNameProperties.value,
             });
         }
     }
 
     const cleanFormEdit = () => {
         formEdit.setFieldsValue({
-            adminFullName: null
-            , adminUsername: null
-            , adminPassword: null
+            categoryProductName: null
         });
     }
 
@@ -127,32 +80,20 @@ const AdminEdit = (props) => {
             .then((values) => {
                 confirm({
                     icon: <QuestionCircleOutlined />,
-                    title: <span>Rubah Data Admin ?</span>,
+                    title: <span>Rubah Data Kategori Produk ?</span>,
                     content: <div>
                         <Row><Col span={24}>Kamu Akan Merubah Data:</Col></Row>
                         <br />
                         <Row>
                             <Col span={2} />
                             <Col span={8}>
-                                Username
+                                Nama Kategori Produk
                             </Col>
                             <Col span={1}>
                                 :
                             </Col>
                             <Col span={12}>
-                                {formEdit.getFieldValue('adminUsername')}
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={2} />
-                            <Col span={8}>
-                                Nama Lengkap
-                            </Col>
-                            <Col span={1}>
-                                :
-                            </Col>
-                            <Col span={12}>
-                                {formEdit.getFieldValue('adminFullName')}
+                                {formEdit.getFieldValue('categoryProductName')}
                             </Col>
                         </Row>
                         <br />
@@ -162,27 +103,25 @@ const AdminEdit = (props) => {
                     cancelText: 'Cancel',
                     onOk: async () => {
                         //Execute Edit Data
-                        const axiosConfigForAdminEdit = {
-                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/admins"
+                        const axiosConfigForCategoryProductEdit = {
+                            url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/category-products"
                             , method: "PATCH"
                             , timeout: 40000
                             , responseType: "json"
                             , responseEncoding: "utf8"
                             , headers: { "Content-Type": "application/json" }
                             , data: {
-                                "admin_id": router.query.admin_id,
-                                "admin_username": formEdit.getFieldValue('adminUsername'),
-                                "admin_password": (formEdit.getFieldValue('adminPassword') ? formEdit.getFieldValue('adminPassword') : null),
-                                "responsible_user_id": 1,
-                                "admin_full_name": formEdit.getFieldValue('adminFullName')
+                                "category_product_id": router.query.category_product_id,
+                                "category_product_name": formEdit.getFieldValue('categoryProductName'),
+                                "responsible_user_id": 1
                             }
                         };
 
                         //Execute Axios Configuration For JsonContentValidation
                         try {
-                            const adminResults = await axios.request(axiosConfigForAdminEdit);
-                            if (adminResults.data.hasOwnProperty('status_code') && adminResults.data.status_code != 200) {
-                                throw adminResults.data
+                            const categoryProductResults = await axios.request(axiosConfigForCategoryProductEdit);
+                            if (categoryProductResults.data.hasOwnProperty('status_code') && categoryProductResults.data.status_code != 200) {
+                                throw categoryProductResults.data
                             }
                             else {
                                 cleanFormEdit();
@@ -192,7 +131,7 @@ const AdminEdit = (props) => {
                                         <Row><Col span={24}>Data Berhasil Dirubah.</Col></Row>
                                     </div>,
                                     onOk: async () => {
-                                        router.push('/admin')
+                                        router.push('/category-products')
                                     }
                                 })
 
@@ -203,7 +142,7 @@ const AdminEdit = (props) => {
                             if (error.response == null) {
                                 Modal.error({
                                     title: "Internal Server Error",
-                                    content: "Error Saat Merubah Data Admin.(Harap Lapor Kepada Admin)",
+                                    content: "Error Saat Merubah Data Category Product.(Harap Lapor Kepada Admin)",
                                 });
                             }
                             else {
@@ -239,61 +178,35 @@ const AdminEdit = (props) => {
         >
             <br />
             <Card
-                title="Rubah Data Admin"
+                title="Rubah Data Kategori Produk"
                 bordered={false}
-            // extra={<Button type="primary" >Tambah Admin</Button>}
+            // extra={<Button type="primary" >Tambah Kategori Produk</Button>}
             >
                 <Form
                     name="basic"
                     form={formEdit}
                     labelCol={{ span: 6 }}
                     autoComplete="off"
-                    style={{ width: '50%' }}
+                    style={{ width: '60%' }}
                 >
                     <Form.Item
-                        label="Nama Lengkap"
-                        name="adminFullName"
+                        label="Nama Kategori Produk"
+                        name="categoryProductName"
                         rules={[
-                            { required: true, message: 'Mohon Isi Nama Lengkap' }
+                            { required: true, message: 'Mohon Isi Nama Kategori Produk' }
                         ]}
+                        validateStatus={txtCategoryProductNameProperties.validateStatus}
+                        help={txtCategoryProductNameProperties.errorMsg}
                     >
                         <Input
-                            defaultValue={router.query.admin_full_name}
-                            onChange={handleTxtFullNameChange}
-                            onBlur={handleTxtFullNameChange}
-                            placeholder="Nama Lengkap"
+                            defaultValue={router.query.category_product_name}
+                            onChange={handleTxtCategoryProductNameChange}
+                            onBlur={handleTxtCategoryProductNameChange}
+                            placeholder="Nama Kategori Produk"
                         />
                     </Form.Item>
 
-                    <Form.Item
-                        label="Username"
-                        name="adminUsername"
-                        rules={[
-                            { required: true, message: 'Mohon Isi Username' }
-                        ]}
-                        validateStatus={txtUsernameProperties.validateStatus}
-                        help={txtUsernameProperties.errorMsg}
-                    >
-                        <Input
-                            defaultValue={router.query.admin_username}
-                            onChange={handleTxtUsernameChange}
-                            onBlur={handleTxtUsernameChange}
-                            placeholder="Username"
-                        />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Password"
-                        name="adminPassword"
-                    >
-                        <Input.Password
-                            onChange={handleTxtPasswordChange}
-                            onBlur={handleTxtPasswordChange}
-                            placeholder="Password (Kosongkan Bila Tidak Ingin Rubah)"
-                        />
-                    </Form.Item>
-
-                    <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleEdit}>
+                    <Button type="primary" style={{ marginLeft: '160px' }} onClick={handleEdit}>
                     Rubah
                     </Button>
                 </Form>
@@ -304,7 +217,7 @@ const AdminEdit = (props) => {
 
 // Get Server Side Props
 export async function getServerSideProps({ req, res }) {
-    console.log("getcookie admin page");
+    console.log("getcookie category product edit page");
     console.log(getCookie('admin_cookies', { req, res }))
     if (!getCookie('admin_cookies', { req, res })) {
         return {
@@ -327,4 +240,4 @@ export async function getServerSideProps({ req, res }) {
   
   }
   
-export default AdminEdit;
+export default CategoryProductEdit;

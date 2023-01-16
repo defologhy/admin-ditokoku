@@ -19,7 +19,7 @@ Router.onRouteChangeStart = (url) => {
 Router.onRouteChangeComplete = () => { NProgress.done() };
 Router.onRouteChangeError = () => { NProgress.done() };
 
-const Admin = (props) => {
+const CategoryProduct = (props) => {
   
   const router = useRouter()
   if (process.browser){
@@ -62,15 +62,13 @@ console.log("cookiesData:",cookiesData)
       // setting filter array
       const searchArrayValues = `
       {
-        "admin_full_name": ${(form.getFieldValue('admin_full_name_for_search') === null || form.getFieldValue('admin_full_name_for_search') === undefined ? null : `["${form.getFieldValue('admin_full_name_for_search')}"]`)},
-        
-        "admin_username": ${(form.getFieldValue('admin_username_for_search') === null || form.getFieldValue('admin_username_for_search') === undefined ? null : `["${form.getFieldValue('admin_username_for_search')}"]`)}
+        "category_product_name": ${(form.getFieldValue('category_product_name_for_search') === null || form.getFieldValue('category_product_name_for_search') === undefined ? null : `["${form.getFieldValue('category_product_name_for_search')}"]`)}
 
       }`;
 
       //Set Axios Configuration For Sign In to NextJS Server
       const axiosConfigForBaseData = {
-        url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + '/admins'
+        url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + '/category-products'
         , method: "GET"
         , timeout: 40000
         , responseType: "json"
@@ -107,7 +105,7 @@ console.log("cookiesData:",cookiesData)
         if (error.response == null) {
           Modal.error({
               title: "Internal Server Error",
-              content: "Error Saat Get Data Admin",
+              content: "Error Saat Get Data Category Products",
           });
         } else {
           if (error.response.status === 401) {
@@ -139,18 +137,11 @@ console.log("cookiesData:",cookiesData)
   const handleSearch = async (selectedKeys, confirm, dataIndex) => {
 
     switch (dataIndex) {
-      case 'admin_full_name':
+      case 'category_product_name':
         form.setFieldsValue({
-          'admin_full_name_for_search': (selectedKeys[0] === undefined || selectedKeys[0] === null ? null : selectedKeys[0])
+          'category_product_name_for_search': (selectedKeys[0] === undefined || selectedKeys[0] === null ? null : selectedKeys[0])
         })
         break;
-
-      case 'admin_username':
-        form.setFieldsValue({
-          'admin_username_for_search': (selectedKeys[0] === undefined || selectedKeys[0] === null ? null : selectedKeys[0])
-        })
-        break;
-
     }
 
     await getBaseDataConstruct();
@@ -162,18 +153,11 @@ console.log("cookiesData:",cookiesData)
   const handleReset = async (clearFilters, confirm, dataIndex) => {
 
     switch (dataIndex) {
-      case 'admin_full_name':
+      case 'category_product_name':
         form.setFieldsValue({
-          'admin_full_name_for_search': null
+          'category_product_name_for_search': null
         })
         break;
-
-      case 'admin_username':
-        form.setFieldsValue({
-          'admin_username_for_search': null
-        })
-        break;
-
     }
 
     clearFilters();
@@ -255,11 +239,11 @@ console.log("cookiesData:",cookiesData)
   // column table base
   const columns = [
     {
-      title: 'Nama Lengkap',
+      title: 'Nama Kategori',
       width: '35%',
-      dataIndex: 'admin_full_name',
-      key: 'admin_full_name',
-      // sorter: (a, b) => a.admin_full_name.localeCompare(b.admin_full_name),
+      dataIndex: 'category_product_name',
+      key: 'category_product_name',
+      // sorter: (a, b) => a.category_product_name.localeCompare(b.category_product_name),
       sortDirections: ['descend', 'ascend'],
       render(text, record) {
         return {
@@ -269,24 +253,7 @@ console.log("cookiesData:",cookiesData)
           children: <div>{text}</div>
         };
       },
-      ...getColumnSearchProps('admin_full_name')
-    },
-    {
-      title: 'Username',
-      width: '35%',
-      dataIndex: 'admin_username',
-      key: 'admin_username',
-      // sorter: (a, b) => a.admin_username.localeCompare(b.admin_username),
-      sortDirections: ['descend', 'ascend'],
-      render(text, record) {
-        return {
-          props: {
-            style: { textAlign: 'left' }
-          },
-          children: <div>{text}</div>
-        };
-      },
-      ...getColumnSearchProps('admin_username')
+      ...getColumnSearchProps('category_product_name')
     },
     {
       title: 'Opsi',
@@ -325,16 +292,16 @@ console.log("cookiesData:",cookiesData)
   
   // button click
   const handleAddButtonClick = async () => {
-    router.push('/admin/add')
+    router.push('/category-products/add')
   }
 
   const handleEditButtonClick = useCallback((data) => {
     return async (e) => {
       e.preventDefault() //we can all this directly here now!
       router.push({
-        pathname: '/admin/edit',
+        pathname: '/category-products/edit',
         query: data
-      }, '/admin/edit')
+      }, '/category-products/edit')
     }
   }, [])
 
@@ -351,25 +318,13 @@ console.log("cookiesData:",cookiesData)
             <Row>
               <Col span={2} />
               <Col span={8}>
-                Username
+                Nama Kategori Produk
               </Col>
               <Col span={1}>
                 :
               </Col>
               <Col span={12}>
-                {data.admin_username}
-              </Col>
-            </Row>
-            <Row>
-              <Col span={2} />
-              <Col span={8}>
-                Nama Lengkap
-              </Col>
-              <Col span={1}>
-                :
-              </Col>
-              <Col span={12}>
-                {data.admin_full_name}
+                {data.category_product_name}
               </Col>
             </Row>
             <br />
@@ -379,24 +334,24 @@ console.log("cookiesData:",cookiesData)
           cancelText: 'Cancel',
           onOk: async () => {
             //Execute Delete Data
-            const axiosConfigForadmin = {
-              url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/admins"
+            const axiosConfigForCategoryProducts = {
+              url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/category-products"
               , method: "DELETE"
               , timeout: 40000
               , responseType: "json"
               , responseEncoding: "utf8"
               , headers: { "Content-Type": "application/json" }
               , data: {
-                admin_id: data.admin_id
+                category_product_id: data.category_product_id
                 , responsible_user_id: 1
               }
             };
 
             //Execute Axios Configuration For JsonContentValidation
             try {
-              const adminResults = await axios.request(axiosConfigForadmin);
-              if (adminResults.data.hasOwnProperty('status_code') && adminResults.data.status_code != 200) {
-                throw adminResults.data
+              const categoryProductResults = await axios.request(axiosConfigForCategoryProducts);
+              if (categoryProductResults.data.hasOwnProperty('status_code') && categoryProductResults.data.status_code != 200) {
+                throw categoryProductResults.data
               }
               else {
                 await getBase()
@@ -414,7 +369,7 @@ console.log("cookiesData:",cookiesData)
               if (error.response == null) {
                 throw {
                   error_title: "Internal Server Error"
-                  , error_message: "Error Saat Hapus Data admin.(Harap Lapor Kepada Admin)"
+                  , error_message: "Error Saat Hapus Data Category Product.(Harap Lapor Kepada Admin)"
                 }
               }
               else {
@@ -460,21 +415,21 @@ console.log("cookiesData:",cookiesData)
               margin: '16px 0',
             }}
           >
-            <Breadcrumb.Item>admin</Breadcrumb.Item>
-            <Breadcrumb.Item>admin</Breadcrumb.Item>
+            <Breadcrumb.Item>Category Product</Breadcrumb.Item>
+            <Breadcrumb.Item>Category Product</Breadcrumb.Item>
           </Breadcrumb> */}
 
-      {/* list admin */}
+      {/* list Category Product */}
       <br />
       <Card
-        title="Admin"
+        title="Kategori Produk"
         bordered={false}
-      // extra={<Button type="primary" >Tambah admin</Button>}
+      // extra={<Button type="primary" >Tambah Category Product</Button>}
       >
         <Table
           style={{ top: 10 }}
           columns={columns}
-          rowKey={record => record.admin_id}
+          rowKey={record => record.category_product_id}
           dataSource={dataTableBase.data}
           pagination={dataTableBase.pagination}
           loading={dataTableBase.loading}
@@ -503,7 +458,7 @@ console.log("cookiesData:",cookiesData)
 
 // Get Server Side Props
 export async function getServerSideProps({ req, res }) {
-  console.log("getcookie admin page");
+  console.log("getcookie category product page");
   console.log(getCookie('admin_cookies', { req, res }))
   if (!getCookie('admin_cookies', { req, res }) || getCookie('admin_cookies', { req, res }) === null || getCookie('admin_cookies', { req, res })==='') {
     return {
@@ -526,4 +481,4 @@ export async function getServerSideProps({ req, res }) {
 
 }
 
-export default Admin;
+export default CategoryProduct;
