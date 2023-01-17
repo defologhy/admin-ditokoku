@@ -187,10 +187,20 @@ const Banner = (props) => {
                         formData.append("file_name", filenameFormat);
                         formData.append("banner_id", bannerId);
                         try {
-                            const res = await axios.post(
-                                process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/banners/upload-image",
-                                formData
-                        );
+                        //     const res = await axios.post(
+                        //         "/api/banners",
+                        //         formData
+                        // );
+                        const config = {
+                            headers: { 'content-type': 'multipart/form-data' },
+                            onUploadProgress: (event) => {
+                              console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
+                            },
+                          };
+                      
+                          const response = await axios.post('/api/banners', formData, config);
+                      
+                          console.log('response', response.data);
                             success({
                                 title: <span>Sukses</span>,
                                 content: <div>
@@ -198,7 +208,7 @@ const Banner = (props) => {
                                 </div>
                             })
                             setImageFilename(filenameFormat)
-                            console.log(res);
+                            console.log(response);
                         } catch (error) {
                             console.log(error)
                             if (error.response == null) {
