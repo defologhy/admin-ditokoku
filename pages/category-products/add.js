@@ -240,10 +240,6 @@ const CategoryProductAdd = (props) => {
                             type={'file'}
                             placeholder="Foto"
                             onChange={(e) => setInputCategoryProductImage(e.target.files)}
-                            onClick={(e) => {
-                                setInputCategoryProductImage(null)
-                                e.target.value = null
-                            }}
                             />
                     </Form.Item>
 

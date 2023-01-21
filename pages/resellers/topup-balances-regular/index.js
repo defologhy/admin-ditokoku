@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Card, Layout, Table, Space, Tooltip, Button, Input, Form, Modal, Row, Col } from 'antd';
 const { Content } = Layout;
-import { EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined, QuestionCircleOutlined, CheckCircleOutlined  } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined, QuestionCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import axios from "axios";
@@ -40,10 +40,10 @@ const ResellerTopUpBalanceRegular = (props) => {
   }, []);
 
   const router = useRouter()
-  if (process.browser){
-      if (props.status_code === 401) {
-          router.push('/auth/login')
-      }
+  if (process.browser) {
+    if (props.status_code === 401) {
+      router.push('/auth/login')
+    }
   }
 
   const cookiesData = (props.cookies_data ? JSON.parse(props.cookies_data) : null);
@@ -56,7 +56,7 @@ const ResellerTopUpBalanceRegular = (props) => {
           , loading: true
         }
       )
-      
+
       // setting filter array
       const searchArrayValues = `
       {"reseller_full_name": ${(form.getFieldValue('reseller_full_name_for_search') === null || form.getFieldValue('reseller_full_name_for_search') === undefined ? null : `["${form.getFieldValue('reseller_full_name_for_search')}"]`)},
@@ -104,17 +104,17 @@ const ResellerTopUpBalanceRegular = (props) => {
         console.log(error)
         if (error.response == null) {
           Modal.error({
-              title: "Internal Server Error",
-              content: "Error Saat Get Data Reseller TopUp Saldo Regular",
+            title: "Internal Server Error",
+            content: "Error Saat Get Data Reseller TopUp Saldo Regular",
           });
         } else {
           if (error.response.status === 401) {
-              Router.push("/auth/login");
-              return {}
+            Router.push("/auth/login");
+            return {}
           }
           Modal.error({
-              title: error.response.data.error_title,
-              content: error.response.data.error_message,
+            title: error.response.data.error_title,
+            content: error.response.data.error_message,
           });
         }
       }
@@ -123,8 +123,8 @@ const ResellerTopUpBalanceRegular = (props) => {
       console.log(error.error_message)
       console.log(error)
       Modal.error({
-          title: error.error_title,
-          content: error.error_message,
+        title: error.error_title,
+        content: error.error_message,
       });
     }
   }
@@ -162,9 +162,9 @@ const ResellerTopUpBalanceRegular = (props) => {
         break;
 
       case 'progress_status_name':
-      form.setFieldsValue({
-        'progress_status_name_for_search': (selectedKeys[0] === undefined || selectedKeys[0] === null ? null : selectedKeys[0])
-      })
+        form.setFieldsValue({
+          'progress_status_name_for_search': (selectedKeys[0] === undefined || selectedKeys[0] === null ? null : selectedKeys[0])
+        })
         break;
 
     }
@@ -196,17 +196,17 @@ const ResellerTopUpBalanceRegular = (props) => {
         })
         break;
 
-        case 'reseller_payment_account_holder_name':
+      case 'reseller_payment_account_holder_name':
         form.setFieldsValue({
           'reseller_payment_account_holder_name_for_search': null
         })
         break;
 
-        case 'progress_status_name':
-          form.setFieldsValue({
-            'progress_status_name_for_search': null
-          })
-            break;
+      case 'progress_status_name':
+        form.setFieldsValue({
+          'progress_status_name_for_search': null
+        })
+        break;
     }
 
     clearFilters();
@@ -421,11 +421,17 @@ const ResellerTopUpBalanceRegular = (props) => {
               onClick={handleDeleteButtonClick(record)}
             />
           </Tooltip> */}
-          <Tooltip title="Verifikasi">
-            <Button style={{ color: 'white' }} type="primary" shape="circle" icon={ <CheckCircleOutlined  />}
-              onClick={handleVerifiedButtonClick(record)}
-            />
-          </Tooltip>
+          {
+            (record.progress_status_id === 1) ?
+              <Tooltip title="Verifikasi">
+                <Button style={{ color: 'white' }} type="primary" shape="circle" icon={<CheckCircleOutlined />}
+                  onClick={handleVerifiedButtonClick(record)}
+                />
+              </Tooltip>
+              :
+              '-'
+          }
+
         </Space>
       ),
       width: '15%',
@@ -482,7 +488,7 @@ const ResellerTopUpBalanceRegular = (props) => {
             <Row>
               <Col span={2} />
               <Col span={8}>
-               Nama Bank
+                Nama Bank
               </Col>
               <Col span={1}>
                 :
@@ -506,7 +512,7 @@ const ResellerTopUpBalanceRegular = (props) => {
             <Row>
               <Col span={2} />
               <Col span={8}>
-               Nominal Top Up
+                Nominal Top Up
               </Col>
               <Col span={1}>
                 :
@@ -515,11 +521,11 @@ const ResellerTopUpBalanceRegular = (props) => {
                 {data.reseller_topup_balance_regular_amount}
               </Col>
             </Row>
-            
+
             <Row>
               <Col span={2} />
               <Col span={8}>
-               Nomor Rekening
+                Nomor Rekening
               </Col>
               <Col span={1}>
                 :
@@ -662,22 +668,22 @@ export async function getServerSideProps({ req, res }) {
   console.log("getcookie ResellerTopUpBalanceRegular page");
   console.log(getCookie('admin_cookies', { req, res }))
   if (!getCookie('admin_cookies', { req, res })) {
-      return {
-          props: {
-              status_code: 401,
-              error_title: "Unauthorized",
-              error_message: "Please sign in to Ditokoku Information System",
-          }
+    return {
+      props: {
+        status_code: 401,
+        error_title: "Unauthorized",
+        error_message: "Please sign in to Ditokoku Information System",
       }
+    }
   }
 
   return {
-      props: {
-          status_code: 200,
-          error_title: "cookie is active",
-          error_message: "cookie is active",
-          cookies_data: getCookie('admin_cookies', { req, res })
-      }
+    props: {
+      status_code: 200,
+      error_title: "cookie is active",
+      error_message: "cookie is active",
+      cookies_data: getCookie('admin_cookies', { req, res })
+    }
   }
 
 }

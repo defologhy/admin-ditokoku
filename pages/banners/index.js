@@ -19,7 +19,7 @@ const { confirm, success } = Modal;
 const Banner = (props) => {
 
     const router = useRouter()
-    if (process.browser){
+    if (process.browser) {
         if (props.status_code === 401) {
             router.push('/auth/login')
         }
@@ -64,9 +64,9 @@ const Banner = (props) => {
             try {
                 const getDataResults = await axios.request(axiosConfigForGetData);
                 const getData = getDataResults.data;
-                
-                setBannerId((getData.data.length!=0 ? getData.data[0].banner_id : null))
-                setImageFilename((getData.data.length!=0 ? getData.data[0].banner_filename : null))
+
+                setBannerId((getData.data.length != 0 ? getData.data[0].banner_id : null))
+                setImageFilename((getData.data.length != 0 ? getData.data[0].banner_filename : null))
 
                 // form.setFieldsValue({
                 //     bannerId : (getData.data.length!=0 ? getData.data[0].banner_id : '')
@@ -182,7 +182,7 @@ const Banner = (props) => {
 
                         const formData = new FormData();
                         const fileFormat = inputFileBannerImage[0].name.split('.');
-                        const filenameFormat =  'banner-' + bannerId + new Date().getTime() + '.' + fileFormat[fileFormat.length - 1];
+                        const filenameFormat = 'banner-' + bannerId + new Date().getTime() + '.' + fileFormat[fileFormat.length - 1];
                         formData.append("file", inputFileBannerImage[0]);
                         formData.append("file_name", filenameFormat);
                         formData.append("banner_id", bannerId);
@@ -190,7 +190,7 @@ const Banner = (props) => {
                             const res = await axios.post(
                                 process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/banners/upload-image",
                                 formData
-                        );
+                            );
                             success({
                                 title: <span>Sukses</span>,
                                 content: <div>
@@ -218,7 +218,7 @@ const Banner = (props) => {
                                 });
                             }
                         }
-                        
+
                         // //Execute  Data
                         // const axiosConfigForBannerSave = {
                         //     url: process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/banners"
@@ -295,23 +295,23 @@ const Banner = (props) => {
                 bordered={false}
             >
                 {bannerId
-                ?
-                <Image
-                    width={'30%'}
-                    src={process.env.REACT_APP_DITOKOKU_API_BASE_URL +'/assets/images/banner/'+imageFilename}
-                    preview={false}
-                    crossOrigin='anonymous'
-                />
-                :
-                <Image
-                    width={'30%'}
-                    src={process.env.REACT_APP_DITOKOKU_API_BASE_URL +'/assets/images/banner/default.png'}
-                    preview={false}
-                    crossOrigin='anonymous'
-                />
+                    ?
+                    <Image
+                        width={'30%'}
+                        src={process.env.REACT_APP_DITOKOKU_API_BASE_URL + '/assets/images/banner/' + imageFilename}
+                        preview={false}
+                        crossOrigin='anonymous'
+                    />
+                    :
+                    <Image
+                        width={'30%'}
+                        src={process.env.REACT_APP_DITOKOKU_API_BASE_URL + '/assets/images/banner/default.png'}
+                        preview={false}
+                        crossOrigin='anonymous'
+                    />
                 }
-                
-            <br /><br />
+
+                <br /><br />
 
                 <Form
                     name="basic"
@@ -320,7 +320,7 @@ const Banner = (props) => {
                     autoComplete="off"
                     style={{ width: '50%' }}
                 >
-                    
+
                     <Form.Item
                         label="Rubah Banner"
                         name="formItemBannerImage"
@@ -332,13 +332,9 @@ const Banner = (props) => {
                             type={'file'}
                             placeholder="Rubah Banner"
                             onChange={(e) => setInputFileBannerImage(e.target.files)}
-                            onClick={(e) => {
-                                setInputFileBannerImage(null)
-                                e.target.value = null
-                            }}
-                            />
+                        />
                     </Form.Item>
-                    
+
                     <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleSave}>
                         Rubah
                     </Button>
@@ -361,7 +357,7 @@ export async function getServerSideProps({ req, res }) {
             }
         }
     }
-  
+
     return {
         props: {
             status_code: 200,
@@ -370,7 +366,7 @@ export async function getServerSideProps({ req, res }) {
             cookies_data: getCookie('admin_cookies', { req, res })
         }
     }
-  
-  }
+
+}
 
 export default Banner;

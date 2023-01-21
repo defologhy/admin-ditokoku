@@ -267,10 +267,6 @@ const CategoryProductEdit = (props) => {
                                     type={'file'}
                                     placeholder="Rubah Foto"
                                     onChange={(e) => setEditCategoryProductImage(e.target.files)}
-                                    onClick={(e) => {
-                                        setEditCategoryProductImage(null)
-                                        e.target.value = null
-                                    }}
                                 />
                             </Form.Item>
 
