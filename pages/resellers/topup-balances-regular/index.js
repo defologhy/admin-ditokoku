@@ -623,7 +623,7 @@ const ResellerTopUpBalanceRegular = (props) => {
       {/* list reseller */}
       <br />
       <Card
-        title="Reseller"
+        title="Top Up Saldo Regular"
         bordered={false}
       // extra={<Button type="primary" >Tambah Reseller</Button>}
       >
