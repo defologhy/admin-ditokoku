@@ -327,6 +327,18 @@ console.log("cookiesData:",cookiesData)
                 {data.category_product_name}
               </Col>
             </Row>
+            <Row>
+              <Col span={2} />
+              <Col span={8}>
+                Foto
+              </Col>
+              <Col span={1}>
+                :
+              </Col>
+              <Col span={12}>
+                {data.category_product_image_filename}
+              </Col>
+            </Row>
             <br />
             <Row><Col span={24}>Apakah Anda Yakin Akan Menghapus Data Ini?</Col></Row>
           </div>,

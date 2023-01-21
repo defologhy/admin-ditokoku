@@ -39,6 +39,7 @@ const CategoryProductAdd = (props) => {
         validateStatus: 'success',
         errorMsg: null,
     });
+    const [inputCategoryProductImage, setInputCategoryProductImage] = useState(null)
 
     // onchange item form
     const handleTxtCategoryProductNameChange = (e) => {
@@ -93,6 +94,18 @@ const CategoryProductAdd = (props) => {
                                 {formAdd.getFieldValue('categoryProductName')}
                             </Col>
                         </Row>
+                        <Row>
+                            <Col span={2} />
+                            <Col span={8}>
+                                Foto
+                            </Col>
+                            <Col span={1}>
+                                :
+                            </Col>
+                            <Col span={12}>
+                                {inputCategoryProductImage[0].name}
+                            </Col>
+                        </Row>
                         <br />
                         <Row><Col span={24}>Apakah Anda Yakin Akan Menyimpan Data Ini?</Col></Row>
                     </div>,
@@ -120,6 +133,17 @@ const CategoryProductAdd = (props) => {
                                 throw categoryProductResults.data
                             }
                             else {
+                                // upload foto
+                                const formData = new FormData();
+                                const fileFormat = inputCategoryProductImage[0].name.split('.');
+                                const filenameFormat =  'category-product-' + categoryProductResults.data.category_product_id + new Date().getTime() + '.' + fileFormat[fileFormat.length - 1];
+                                formData.append("file", inputCategoryProductImage[0]);
+                                formData.append("file_name", filenameFormat);
+                                formData.append("category_product_id", categoryProductResults.data.category_product_id);
+
+                                await axios.post(process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/category-products/upload-image",
+                                formData);
+
                                 cleanFormAdd();
                                 success({
                                     title: <span>Sukses</span>,
@@ -181,7 +205,6 @@ const CategoryProductAdd = (props) => {
                 <Form
                     name="basic"
                     form={formAdd}
-                    labelCol={{ span: 6 }}
                     // initialValues={{
                     //     FullName: txtFullNameProperties.value
                     //     , CategoryProductEffectiveStartDatetime: txtCategoryProductEffectiveStartDatetimeProperties.value
@@ -191,7 +214,7 @@ const CategoryProductAdd = (props) => {
                     style={{ width: '60%' }}
                 >
                     <Form.Item
-                        label="Nama Kategori Produk"
+                        label="Nama"
                         name="categoryProductName"
                         rules={[
                             { required: true, message: 'Mohon Isi Nama Kategori Produk' }
@@ -206,7 +229,25 @@ const CategoryProductAdd = (props) => {
                         />
                     </Form.Item>
 
-                    <Button type="primary" style={{ marginLeft: '160px' }} onClick={handleAdd}>
+                    <Form.Item
+                        label="Foto"
+                        name="categoryProductImage"
+                        rules={[
+                            { required: true, message: 'Mohon Isi Foto' }
+                        ]}
+                    >
+                        <Input
+                            type={'file'}
+                            placeholder="Foto"
+                            onChange={(e) => setInputCategoryProductImage(e.target.files)}
+                            onClick={(e) => {
+                                setInputCategoryProductImage(null)
+                                e.target.value = null
+                            }}
+                            />
+                    </Form.Item>
+
+                    <Button type="primary" style={{ marginLeft: '50px' }} onClick={handleAdd}>
                         Simpan
                     </Button>
                 </Form>

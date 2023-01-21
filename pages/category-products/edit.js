@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import NProgress from 'nprogress';
 import axios from "axios";
 import Router, { useRouter } from 'next/router';
-import { Card, Layout, Upload, Button, Input, Form, Select, Row, Col, Modal } from 'antd';
+import { Card, Layout, Upload, Button, Input, Form, Select, Row, Col, Modal, Image } from 'antd';
 const { Content } = Layout;
 import { UploadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
@@ -20,12 +20,12 @@ const CategoryProductEdit = (props) => {
 
     // router
     const router = useRouter()
-    if (process.browser){
+    if (process.browser) {
         if (props.status_code === 401) {
             router.push('/auth/login')
         }
     }
-    
+
     const cookiesData = (props.cookies_data ? JSON.parse(props.cookies_data) : null);
 
     const [formEdit] = Form.useForm();
@@ -35,11 +35,14 @@ const CategoryProductEdit = (props) => {
         validateStatus: 'success',
         errorMsg: null,
     });
+    const [editCategoryProductImage, setEditCategoryProductImage] = useState(null)
+    const [editImageFilename, setEditImageFilename] = useState(null)
 
     useEffect(() => {
         formEdit.setFieldsValue({
             categoryProductName: router.query.category_product_name
         });
+        setEditImageFilename(router.query.category_product_image_filename)
     }, []);
 
     // onchange item form
@@ -96,6 +99,18 @@ const CategoryProductEdit = (props) => {
                                 {formEdit.getFieldValue('categoryProductName')}
                             </Col>
                         </Row>
+                        <Row>
+                            <Col span={2} />
+                            <Col span={8}>
+                                Foto
+                            </Col>
+                            <Col span={1}>
+                                :
+                            </Col>
+                            <Col span={12}>
+                                {(editCategoryProductImage ? editCategoryProductImage[0].name : editImageFilename)}
+                            </Col>
+                        </Row>
                         <br />
                         <Row><Col span={24}>Apakah Anda Yakin Akan Merubah Data Ini?</Col></Row>
                     </div>,
@@ -124,6 +139,23 @@ const CategoryProductEdit = (props) => {
                                 throw categoryProductResults.data
                             }
                             else {
+
+                                if (editCategoryProductImage) {
+
+                                    // upload foto
+                                    const formData = new FormData();
+                                    const fileFormat = editCategoryProductImage[0].name.split('.');
+                                    const filenameFormat = 'category-product-' + categoryProductResults.data.category_product_id + new Date().getTime() + '.' + fileFormat[fileFormat.length - 1];
+                                    formData.append("file", editCategoryProductImage[0]);
+                                    formData.append("file_name", filenameFormat);
+                                    formData.append("category_product_id", router.query.category_product_id);
+
+                                    await axios.post(process.env.REACT_APP_DITOKOKU_API_BASE_URL + process.env.REACT_APP_DITOKOKU_API_VERSION_URL + "/category-products/upload-image",
+                                        formData);
+
+
+                                }
+
                                 cleanFormEdit();
                                 success({
                                     title: <span>Sukses</span>,
@@ -185,30 +217,70 @@ const CategoryProductEdit = (props) => {
                 <Form
                     name="basic"
                     form={formEdit}
-                    labelCol={{ span: 6 }}
                     autoComplete="off"
-                    style={{ width: '60%' }}
+                    style={{ width: '100%' }}
                 >
-                    <Form.Item
-                        label="Nama Kategori Produk"
-                        name="categoryProductName"
-                        rules={[
-                            { required: true, message: 'Mohon Isi Nama Kategori Produk' }
-                        ]}
-                        validateStatus={txtCategoryProductNameProperties.validateStatus}
-                        help={txtCategoryProductNameProperties.errorMsg}
-                    >
-                        <Input
-                            defaultValue={router.query.category_product_name}
-                            onChange={handleTxtCategoryProductNameChange}
-                            onBlur={handleTxtCategoryProductNameChange}
-                            placeholder="Nama Kategori Produk"
-                        />
-                    </Form.Item>
+                    <Row>
+                        <Col span={4}>
+                        {router.query.category_product_image_filename
+                                ?
+                                <Image
+                                    width={'80%'}
+                                    src={process.env.REACT_APP_DITOKOKU_API_BASE_URL + '/assets/images/category-products/' + editImageFilename}
+                                    preview={false}
+                                    crossOrigin='anonymous'
+                                />
+                                :
+                                <Image
+                                    width={'80%'}
+                                    src={process.env.REACT_APP_DITOKOKU_API_BASE_URL + '/assets/images/category-products/t-shirt.svg'}
+                                    preview={false}
+                                    crossOrigin='anonymous'
+                                />
+                            }
+                            
+                        </Col>
+                        <Col span={8}>
 
-                    <Button type="primary" style={{ marginLeft: '160px' }} onClick={handleEdit}>
-                    Rubah
-                    </Button>
+                            <Form.Item
+                                label="Nama"
+                                name="categoryProductName"
+                                rules={[
+                                    { required: true, message: 'Mohon Isi Nama Kategori Produk' }
+                                ]}
+                                validateStatus={txtCategoryProductNameProperties.validateStatus}
+                                help={txtCategoryProductNameProperties.errorMsg}
+                            >
+                                <Input
+                                    defaultValue={router.query.category_product_name}
+                                    onChange={handleTxtCategoryProductNameChange}
+                                    onBlur={handleTxtCategoryProductNameChange}
+                                    placeholder="Nama Kategori Produk"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                label="Rubah Foto"
+                                name="categoryProductImage"
+                            >
+                                <Input
+                                    type={'file'}
+                                    placeholder="Rubah Foto"
+                                    onChange={(e) => setEditCategoryProductImage(e.target.files)}
+                                    onClick={(e) => {
+                                        setEditCategoryProductImage(null)
+                                        e.target.value = null
+                                    }}
+                                />
+                            </Form.Item>
+
+                            <Button type="primary" onClick={handleEdit}>
+                                Rubah
+                            </Button>
+
+                        </Col>
+
+                    </Row>
                 </Form>
             </Card>
         </Content >
@@ -228,7 +300,7 @@ export async function getServerSideProps({ req, res }) {
             }
         }
     }
-  
+
     return {
         props: {
             status_code: 200,
@@ -237,7 +309,7 @@ export async function getServerSideProps({ req, res }) {
             cookies_data: getCookie('admin_cookies', { req, res })
         }
     }
-  
-  }
-  
+
+}
+
 export default CategoryProductEdit;
