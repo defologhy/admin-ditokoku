@@ -194,7 +194,7 @@ const Banner = (props) => {
                             success({
                                 title: <span>Sukses</span>,
                                 content: <div>
-                                    <Row><Col span={24}>Data Banner Berhasil Di Rubah.</Col></Row>
+                                    <Row><Col span={24}>Data Banner Berhasil Di Ubah.</Col></Row>
                                 </div>
                             })
                             setImageFilename(filenameFormat)
@@ -204,7 +204,7 @@ const Banner = (props) => {
                             if (error.response == null) {
                                 Modal.error({
                                     title: "Internal Server Error",
-                                    content: "Error Saat Rubah Data Banner.(Harap Lapor Kepada Admin)",
+                                    content: "Error Saat Ubah Data Banner.(Harap Lapor Kepada Admin)",
                                 });
                             }
                             else {
@@ -244,7 +244,7 @@ const Banner = (props) => {
                         //         success({
                         //             title: <span>Sukses</span>,
                         //             content: <div>
-                        //                 <Row><Col span={24}>Data Banner Berhasil Di Rubah.</Col></Row>
+                        //                 <Row><Col span={24}>Data Banner Berhasil Di Ubah.</Col></Row>
                         //             </div>
                         //         })
 
@@ -322,7 +322,7 @@ const Banner = (props) => {
                 >
 
                     <Form.Item
-                        label="Rubah Banner"
+                        label="Ubah Banner"
                         name="formItemBannerImage"
                         rules={[
                             { required: true, message: 'Mohon Isi Foto' }
@@ -330,13 +330,13 @@ const Banner = (props) => {
                     >
                         <Input
                             type={'file'}
-                            placeholder="Rubah Banner"
+                            placeholder="Ubah Banner"
                             onChange={(e) => setInputFileBannerImage(e.target.files)}
                         />
                     </Form.Item>
 
                     <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleSave}>
-                        Rubah
+                        Ubah
                     </Button>
                 </Form>
             </Card>

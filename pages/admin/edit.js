@@ -127,7 +127,7 @@ const AdminEdit = (props) => {
             .then((values) => {
                 confirm({
                     icon: <QuestionCircleOutlined />,
-                    title: <span>Rubah Data Admin ?</span>,
+                    title: <span>Ubah Data Admin ?</span>,
                     content: <div>
                         <Row><Col span={24}>Kamu Akan Merubah Data:</Col></Row>
                         <br />
@@ -239,7 +239,7 @@ const AdminEdit = (props) => {
         >
             <br />
             <Card
-                title="Rubah Data Admin"
+                title="Ubah Data Admin"
                 bordered={false}
             // extra={<Button type="primary" >Tambah Admin</Button>}
             >
@@ -289,12 +289,12 @@ const AdminEdit = (props) => {
                         <Input.Password
                             onChange={handleTxtPasswordChange}
                             onBlur={handleTxtPasswordChange}
-                            placeholder="Password (Kosongkan Bila Tidak Ingin Rubah)"
+                            placeholder="Password (Kosongkan Bila Tidak Ingin Ubah)"
                         />
                     </Form.Item>
 
                     <Button type="primary" style={{ marginLeft: '100px' }} onClick={handleEdit}>
-                    Rubah
+                    Ubah
                     </Button>
                 </Form>
             </Card>

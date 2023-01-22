@@ -83,7 +83,7 @@ const CategoryProductEdit = (props) => {
             .then((values) => {
                 confirm({
                     icon: <QuestionCircleOutlined />,
-                    title: <span>Rubah Data Kategori Produk ?</span>,
+                    title: <span>Ubah Data Kategori Produk ?</span>,
                     content: <div>
                         <Row><Col span={24}>Kamu Akan Merubah Data:</Col></Row>
                         <br />
@@ -210,7 +210,7 @@ const CategoryProductEdit = (props) => {
         >
             <br />
             <Card
-                title="Rubah Data Kategori Produk"
+                title="Ubah Data Kategori Produk"
                 bordered={false}
             // extra={<Button type="primary" >Tambah Kategori Produk</Button>}
             >
@@ -260,18 +260,18 @@ const CategoryProductEdit = (props) => {
                             </Form.Item>
 
                             <Form.Item
-                                label="Rubah Foto"
+                                label="Ubah Foto"
                                 name="categoryProductImage"
                             >
                                 <Input
                                     type={'file'}
-                                    placeholder="Rubah Foto"
+                                    placeholder="Ubah Foto"
                                     onChange={(e) => setEditCategoryProductImage(e.target.files)}
                                 />
                             </Form.Item>
 
                             <Button type="primary" onClick={handleEdit}>
-                                Rubah
+                                Ubah
                             </Button>
 
                         </Col>
