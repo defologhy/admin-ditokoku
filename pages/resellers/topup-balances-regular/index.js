@@ -537,7 +537,7 @@ const ResellerTopUpBalanceRegular = (props) => {
             <br />
             <Row><Col span={24}>Apakah Anda Yakin Akan Verifikasi Data Ini?</Col></Row>
           </div>,
-          okText: 'Varifikasi',
+          okText: 'Verifikasi',
           cancelText: 'Cancel',
           onOk: async () => {
             //Execute Delete Data
